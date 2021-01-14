@@ -43,7 +43,6 @@ class App extends React.Component<AppProps, AppState> {
                         style={{
                             padding: '0 50px',
                             marginTop: 64,
-                            background: '#fff',
                             minHeight: 'calc(100vh - 134px)',
                         }}
                     >

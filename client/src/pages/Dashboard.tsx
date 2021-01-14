@@ -34,7 +34,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 <p>Visualización de algoritmos de sorting</p>
                             </Card>
                         </Col>
-                        <Col xs={24} sm={12} lg={8} xl={6} style={{ display: 'flex' }}>
+                        {/* <Col xs={24} sm={12} lg={8} xl={6} style={{ display: 'flex' }}>
                             <Card
                                 title="Pathfinding"
                                 bordered={false}
@@ -83,7 +83,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             >
                                 <p>Visualización de algoritmos de compresión</p>
                             </Card>
-                        </Col>
+                        </Col> */}
                     </Row>
                 </div>
             </div>

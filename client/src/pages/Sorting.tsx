@@ -59,7 +59,6 @@ class Sorting extends React.Component<SortingProps, SortingState> {
     // method to generate a new array
     generateArray(): void {
         if (this.state.isCurrentlySorting) return;
-        if (this.state.isSorted) this.reset();
         this.setState({ isSorted: false });
         const array = [];
         for (let i = 0; i < this.state.size; i++) {
@@ -73,7 +72,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                 array.push(this.state.size - i + 1);
             }
         }
-        this.setState({ array: array });
+        this.setState({ array: array }, this.reset);
     }
 
     // method to sort an array
@@ -122,7 +121,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
 
     // animates an array access with a temporary color change
     animateAccess(array: HTMLCollectionOf<HTMLDivElement>, index: number, color: string): void {
-        const style = array[index].style;
+        const style = array[index]?.style;
         this.timeouts.push(
             setTimeout(() => {
                 style.background = color;
@@ -137,7 +136,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
 
     // animate a sorted element in an array with a color change
     animateSorted(array: HTMLCollectionOf<HTMLDivElement>, index: number, color: string): void {
-        const style = array[index].style;
+        const style = array[index]?.style;
         this.timeouts.push(
             setTimeout(() => {
                 style.background = color;
@@ -149,7 +148,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
     reset(): void {
         const array = this.ref.current?.children as HTMLCollectionOf<HTMLDivElement>;
         for (let i = 0; i < this.state.size; i++) {
-            const style = array[i].style;
+            const style = array[i]?.style;
             style.background = UNSORTED_COLOR;
         }
     }
@@ -159,7 +158,6 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         this.timeouts.forEach((timeout) => {
             clearTimeout(timeout);
         });
-        this.reset();
         this.setState({ isCurrentlySorting: false, comparisons: 0, swaps: 0 }, this.generateArray);
     };
 
