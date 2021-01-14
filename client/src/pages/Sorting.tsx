@@ -170,12 +170,12 @@ class Sorting extends React.Component<SortingProps, SortingState> {
 
     // handler for order select
     handleOrderChange = (order: string): void => {
-        this.setState({ order: order }, this.generateArray);
+        this.setState({ order: order }, this.clear);
     };
 
     // handler for size input number
     handleSizeChange = (value: number | string | undefined): void => {
-        if (value && value >= 10 && value <= 200) this.setState({ size: value as number }, this.generateArray);
+        if (value && value >= 10 && value <= 200) this.setState({ size: value as number }, this.clear);
     };
 
     // handler for speed slider
@@ -198,11 +198,11 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                 </Breadcrumb>
 
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', marginRight: '12px' }}>
+                    <Space wrap size={6} align={'end'} style={{ justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <p style={{ margin: 0, marginLeft: '4px', fontSize: '12px' }}>Algorithm</p>
                             <Select
-                                style={{ maxWidth: '140px' }}
+                                style={{ width: '130px' }}
                                 defaultValue={this.state.algorithm}
                                 onChange={this.handleAlgorithmChange}
                                 disabled={this.state.isCurrentlySorting}
@@ -217,10 +217,10 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                             </Select>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', marginRight: '12px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <p style={{ margin: 0, marginLeft: '4px', fontSize: '12px' }}>Order</p>
                             <Select
-                                style={{ maxWidth: '140px' }}
+                                style={{ width: '130px' }}
                                 defaultValue={this.state.order}
                                 onChange={this.handleOrderChange}
                                 disabled={this.state.isCurrentlySorting}
@@ -237,10 +237,10 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                             </Select>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', marginRight: '12px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <p style={{ margin: 0, marginLeft: '4px', fontSize: '12px' }}>Size</p>
                             <InputNumber
-                                style={{ maxWidth: '80px' }}
+                                style={{ width: '80px' }}
                                 min={10}
                                 max={200}
                                 defaultValue={this.state.size}
@@ -249,16 +249,16 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                             />
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', marginRight: '12px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <p style={{ margin: 0, marginLeft: '4px', fontSize: '12px' }}>Speed</p>
                             <Slider
                                 tipFormatter={null}
                                 min={2}
-                                max={4.0}
+                                max={3.8}
                                 step={0.1}
                                 disabled={this.state.isCurrentlySorting}
                                 defaultValue={this.state.speed}
-                                style={{ width: '100px' }}
+                                style={{ width: '96px' }}
                                 onChange={this.handleSpeedChange}
                             />
                         </div>
@@ -272,34 +272,10 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                         >
                             {this.state.isSorted ? 'Reset' : this.state.isCurrentlySorting ? 'Cancel' : 'Start'}
                         </Button>
-                    </div>
-                </div>
-
-                <Divider />
-
-                <div
-                    style={{
-                        display: `${this.state.isCurrentlySorting || this.state.isSorted ? 'flex' : 'none'}`,
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Statistic style={{ marginRight: '18px' }} title="Comparisons" value={this.state.comparisons} />
-                    <Statistic style={{ marginRight: '96px' }} title="Swaps" value={this.state.swaps} />
-
-                    <Space size={'small'}>
-                        <Tag color={UNSORTED_COLOR}>Unsorted</Tag>
-                        <Tag color={COMPARISON_COLOR}>Comparison</Tag>
-                        <Tag color={COPY_COLOR}>Copy</Tag>
-                        <Tag color={SWAP_COLOR}>Swap</Tag>
-                        <Tag color={SORTED_COLOR}>Sorted</Tag>
                     </Space>
                 </div>
 
-                <Divider
-                    style={{ display: `${this.state.isCurrentlySorting || this.state.isSorted ? 'flex' : 'none'}` }}
-                />
+                <Divider />
 
                 <div style={{ margin: '16px', display: 'flex', flexDirection: 'column' }}>
                     <div
@@ -309,7 +285,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                         {this.state.array.map((height, index) => (
                             <div
                                 style={{
-                                    height: `${(50 * height) / this.state.size}vh`,
+                                    height: `${(45 * height) / this.state.size}vh`,
                                     width: `${100 / this.state.size}vw`,
                                     background: UNSORTED_COLOR,
                                     borderRadius: '0.5em',
@@ -320,6 +296,42 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                         ))}
                     </div>
                 </div>
+
+                <Divider />
+
+                <Space
+                    direction={'vertical'}
+                    size={32}
+                    style={{
+                        display: `${this.state.isCurrentlySorting || this.state.isSorted ? 'flex' : 'none'}`,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Space size={6}>
+                        <Tag style={{ margin: 0 }} color={UNSORTED_COLOR}>
+                            Unsorted
+                        </Tag>
+                        <Tag style={{ margin: 0 }} color={COMPARISON_COLOR}>
+                            Comparison
+                        </Tag>
+                        <Tag style={{ margin: 0 }} color={COPY_COLOR}>
+                            Copy
+                        </Tag>
+                        <Tag style={{ margin: 0 }} color={SWAP_COLOR}>
+                            Swap
+                        </Tag>
+                        <Tag style={{ margin: 0 }} color={SORTED_COLOR}>
+                            Sorted
+                        </Tag>
+                    </Space>
+
+                    <Space size={16} style={{ marginBottom: '24px' }}>
+                        <Statistic title="Comparisons" value={this.state.comparisons} />
+                        <Statistic title="Swaps" value={this.state.swaps} />
+                    </Space>
+                </Space>
+
+                <Divider />
             </div>
         );
     }
