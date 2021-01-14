@@ -15,6 +15,10 @@ class RadixSort extends Sort {
 
         // sort with counting sort for each decimal place.
         for (let place = 1; Math.floor(max / place) > 0; place *= 10) this.counting.sort(array, place);
+
+        for (let i = 0; i < n; i++) {
+            this.sorted(i);
+        }
     }
 
     setListener(listener: SortListener): void {
