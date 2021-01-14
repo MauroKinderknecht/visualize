@@ -1,10 +1,16 @@
 import React, { MutableRefObject } from 'react';
-import { Breadcrumb, Button, Divider, InputNumber, Select, Slider } from 'antd';
+import { Breadcrumb, Button, Divider, InputNumber, Select, Slider, Space, Statistic, Tag } from 'antd';
 import SortType from '../algorithms/sorting/utils/SortType';
 import Provider from '../algorithms/sorting/utils/Provider';
 import SortListener from '../algorithms/sorting/utils/SortListener';
 
 const { Option } = Select;
+
+const UNSORTED_COLOR = 'blueviolet';
+const COMPARISON_COLOR = 'gold';
+const SWAP_COLOR = 'red';
+const COPY_COLOR = 'blue';
+const SORTED_COLOR = 'lime';
 
 interface SortingProps {
     theme?: string;
@@ -18,6 +24,8 @@ interface SortingState {
     speed: number;
     delay: number;
     isCurrentlySorting: boolean;
+    comparisons: number;
+    swaps: number;
     isSorted: boolean;
 }
 
@@ -35,6 +43,8 @@ class Sorting extends React.Component<SortingProps, SortingState> {
             speed: 3.5,
             delay: Math.pow(10, 5 - 3.5),
             isCurrentlySorting: false,
+            comparisons: 0,
+            swaps: 0,
             isSorted: false,
         };
         this.ref = React.createRef();
@@ -78,26 +88,27 @@ class Sorting extends React.Component<SortingProps, SortingState> {
             this.timeouts.push(
                 setTimeout(() => {
                     if (animation[0] === 'comparison') {
-                        this.animateAccess(array, animation[1] as number, 'yellow');
-                        this.animateAccess(array, animation[2] as number, 'yellow');
+                        this.animateAccess(array, animation[1] as number, COMPARISON_COLOR);
+                        this.animateAccess(array, animation[2] as number, COMPARISON_COLOR);
+                        this.setState({ comparisons: this.state.comparisons + 1 });
                     } else if (animation[0] === 'swap') {
-                        this.animateAccess(array, animation[1] as number, 'red');
-                        this.animateAccess(array, animation[2] as number, 'red');
+                        this.animateAccess(array, animation[1] as number, SWAP_COLOR);
+                        this.animateAccess(array, animation[2] as number, SWAP_COLOR);
 
                         const prev = this.state.array;
                         const current = [...prev];
                         current[animation[1] as number] = prev[animation[2] as number];
                         current[animation[2] as number] = prev[animation[1] as number];
-                        this.setState({ array: current });
+                        this.setState({ array: current, swaps: this.state.comparisons + 1 });
                     } else if (animation[0] === 'copy') {
-                        this.animateAccess(array, animation[1] as number, 'blue');
+                        this.animateAccess(array, animation[1] as number, COPY_COLOR);
 
                         const prev = this.state.array;
                         const current = [...prev];
                         current[animation[1] as number] = animation[2] as number;
-                        this.setState({ array: current });
+                        this.setState({ array: current, swaps: this.state.comparisons + 1 });
                     } else {
-                        this.animateSorted(array, animation[1] as number, 'turquoise');
+                        this.animateSorted(array, animation[1] as number, SORTED_COLOR);
                     }
                 }, index * this.state.delay),
             );
@@ -119,7 +130,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         );
         this.timeouts.push(
             setTimeout(() => {
-                style.background = 'blueviolet';
+                style.background = UNSORTED_COLOR;
             }, this.state.delay * 2),
         );
     }
@@ -139,7 +150,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         const array = this.ref.current?.children as HTMLCollectionOf<HTMLDivElement>;
         for (let i = 0; i < this.state.size; i++) {
             const style = array[i].style;
-            style.background = 'blueviolet';
+            style.background = UNSORTED_COLOR;
         }
     }
 
@@ -149,7 +160,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
             clearTimeout(timeout);
         });
         this.reset();
-        this.setState({ isCurrentlySorting: false }, this.generateArray);
+        this.setState({ isCurrentlySorting: false, comparisons: 0, swaps: 0 }, this.generateArray);
     };
 
     // handler for algorithm select
@@ -243,7 +254,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                             <Slider
                                 tipFormatter={null}
                                 min={2}
-                                max={4.5}
+                                max={4.0}
                                 step={0.1}
                                 disabled={this.state.isCurrentlySorting}
                                 defaultValue={this.state.speed}
@@ -266,6 +277,30 @@ class Sorting extends React.Component<SortingProps, SortingState> {
 
                 <Divider />
 
+                <div
+                    style={{
+                        display: `${this.state.isCurrentlySorting || this.state.isSorted ? 'flex' : 'none'}`,
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Statistic style={{ marginRight: '18px' }} title="Comparisons" value={this.state.comparisons} />
+                    <Statistic style={{ marginRight: '96px' }} title="Swaps" value={this.state.swaps} />
+
+                    <Space size={'small'}>
+                        <Tag color={UNSORTED_COLOR}>Unsorted</Tag>
+                        <Tag color={COMPARISON_COLOR}>Comparison</Tag>
+                        <Tag color={COPY_COLOR}>Copy</Tag>
+                        <Tag color={SWAP_COLOR}>Swap</Tag>
+                        <Tag color={SORTED_COLOR}>Sorted</Tag>
+                    </Space>
+                </div>
+
+                <Divider
+                    style={{ display: `${this.state.isCurrentlySorting || this.state.isSorted ? 'flex' : 'none'}` }}
+                />
+
                 <div style={{ margin: '16px', display: 'flex', flexDirection: 'column' }}>
                     <div
                         ref={this.ref}
@@ -274,9 +309,9 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                         {this.state.array.map((height, index) => (
                             <div
                                 style={{
-                                    height: `${(60 * height) / this.state.size}vh`,
+                                    height: `${(50 * height) / this.state.size}vh`,
                                     width: `${100 / this.state.size}vw`,
-                                    background: 'blueviolet',
+                                    background: UNSORTED_COLOR,
                                     borderRadius: '0.5em',
                                     margin: '0.15%',
                                 }}
