@@ -41,10 +41,12 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         this.timeouts = [];
     }
 
+    // generate an array when the component is first loaded
     componentDidMount(): void {
         this.generateArray();
     }
 
+    // method to generate a new array
     generateArray(): void {
         if (this.state.isCurrentlySorting) return;
         if (this.state.isSorted) this.reset();
@@ -64,6 +66,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         this.setState({ array: array });
     }
 
+    // method to sort an array
     sort(): void {
         const sort = Provider.get(this.state.algorithm);
         const listener = new SortListener();
@@ -106,6 +109,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         );
     }
 
+    // animates an array access with a temporary color change
     animateAccess(array: HTMLCollectionOf<HTMLDivElement>, index: number, color: string): void {
         const style = array[index].style;
         this.timeouts.push(
@@ -120,6 +124,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         );
     }
 
+    // animate a sorted element in an array with a color change
     animateSorted(array: HTMLCollectionOf<HTMLDivElement>, index: number, color: string): void {
         const style = array[index].style;
         this.timeouts.push(
@@ -129,6 +134,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         );
     }
 
+    // reset all color changes
     reset(): void {
         const array = this.ref.current?.children as HTMLCollectionOf<HTMLDivElement>;
         for (let i = 0; i < this.state.size; i++) {
@@ -137,33 +143,39 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         }
     }
 
-    handleAlgorithmChange = (sort: SortType): void => {
-        this.setState({ algorithm: sort });
-    };
-
-    handleSizeChange = (value: number | string | undefined): void => {
-        if (value && value >= 10 && value <= 200) this.setState({ size: value as number }, this.generateArray);
-    };
-
-    handleOrderChange = (order: string): void => {
-        this.setState({ order: order }, this.generateArray);
-    };
-
-    handleSpeedChange = (speed: number): void => {
-        this.setState({ speed: speed, delay: Math.pow(10, 4.5 - speed) });
-    };
-
-    startSorting = (): void => {
-        if (this.state.isSorted) this.reset();
-        this.setState({ isCurrentlySorting: true }, this.sort);
-    };
-
+    // deletes all timed animations
     clear = (): void => {
         this.timeouts.forEach((timeout) => {
             clearTimeout(timeout);
         });
         this.reset();
         this.setState({ isCurrentlySorting: false }, this.generateArray);
+    };
+
+    // handler for algorithm select
+    handleAlgorithmChange = (sort: SortType): void => {
+        this.setState({ algorithm: sort });
+    };
+
+    // handler for order select
+    handleOrderChange = (order: string): void => {
+        this.setState({ order: order }, this.generateArray);
+    };
+
+    // handler for size input number
+    handleSizeChange = (value: number | string | undefined): void => {
+        if (value && value >= 10 && value <= 200) this.setState({ size: value as number }, this.generateArray);
+    };
+
+    // handler for speed slider
+    handleSpeedChange = (speed: number): void => {
+        this.setState({ speed: speed, delay: Math.pow(10, 4.5 - speed) });
+    };
+
+    // handler for start button
+    startSorting = (): void => {
+        if (this.state.isSorted) this.reset();
+        this.setState({ isCurrentlySorting: true }, this.sort);
     };
 
     render(): JSX.Element {

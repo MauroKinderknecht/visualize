@@ -11,6 +11,7 @@ import Sort from './Sort';
 import SortType from './SortType';
 
 class Provider {
+    // return all sorting types
     static getAll(): SortType[] {
         return [
             SortType.Bubble,
@@ -25,6 +26,7 @@ class Provider {
         ];
     }
 
+    // returns a sorter for each sort type
     static get(sort: SortType): Sort {
         switch (sort) {
             case SortType.Bubble:
@@ -48,6 +50,7 @@ class Provider {
         }
     }
 
+    // returns the string value from a sort type
     static toString(sort: SortType): string {
         return SortType[sort];
     }

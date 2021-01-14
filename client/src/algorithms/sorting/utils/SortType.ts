@@ -1,3 +1,4 @@
+// enum of sort types
 enum SortType {
     Bubble,
     Quick,
