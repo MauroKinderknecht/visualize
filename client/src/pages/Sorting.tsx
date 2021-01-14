@@ -32,8 +32,8 @@ class Sorting extends React.Component<SortingProps, SortingState> {
             size: 50,
             order: 'random',
             algorithm: SortType.Quick,
-            speed: 2.3,
-            delay: 20, //Math.pow(10, 3 - 1.176) + 5,
+            speed: 3.5,
+            delay: Math.pow(10, 5 - 3.5),
             isCurrentlySorting: false,
             isSorted: false,
         };
@@ -68,7 +68,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         const sort = Provider.get(this.state.algorithm);
         const listener = new SortListener();
         sort.setListener(listener);
-        sort.sort(this.state.array);
+        sort.sort(this.state.array.slice());
         const animations = listener.getAnimations();
         const array = this.ref.current?.children as HTMLCollectionOf<HTMLDivElement>;
         animations.forEach((animation, index) => {
@@ -150,7 +150,7 @@ class Sorting extends React.Component<SortingProps, SortingState> {
     };
 
     handleSpeedChange = (speed: number): void => {
-        this.setState({ speed: speed, delay: Math.pow(10, 3 - speed) + 5 });
+        this.setState({ speed: speed, delay: Math.pow(10, 4.5 - speed) });
     };
 
     startSorting = (): void => {
@@ -162,8 +162,8 @@ class Sorting extends React.Component<SortingProps, SortingState> {
         this.timeouts.forEach((timeout) => {
             clearTimeout(timeout);
         });
-        this.setState({ isCurrentlySorting: false }, this.generateArray);
         this.reset();
+        this.setState({ isCurrentlySorting: false }, this.generateArray);
     };
 
     render(): JSX.Element {
@@ -230,9 +230,9 @@ class Sorting extends React.Component<SortingProps, SortingState> {
                             <p style={{ margin: 0, marginLeft: '4px', fontSize: '12px' }}>Speed</p>
                             <Slider
                                 tipFormatter={null}
-                                min={0.4}
-                                max={3}
-                                step={0.001}
+                                min={2}
+                                max={4.5}
+                                step={0.1}
                                 disabled={this.state.isCurrentlySorting}
                                 defaultValue={this.state.speed}
                                 style={{ width: '100px' }}

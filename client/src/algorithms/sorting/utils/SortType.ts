@@ -5,6 +5,11 @@ enum SortType {
     Selection,
     Shell,
     Merge,
+    Bucket,
+    Comb,
+    Counting,
+    Heap,
+    Radix,
 }
 
 export default SortType;
