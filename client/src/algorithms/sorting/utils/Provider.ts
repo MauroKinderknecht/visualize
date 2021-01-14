@@ -1,8 +1,6 @@
 import BubbleSort from '../Bubble';
 import BucketSort from '../Bucket';
-import CombSort from '../Comb';
 import CountingSort from '../Counting';
-import HeapSort from '../Heap';
 import InsertionSort from '../Insertion';
 import MergeSort from '../Merge';
 import QuickSort from '../Quick';
@@ -17,9 +15,7 @@ class Provider {
         return [
             SortType.Bubble,
             SortType.Bucket,
-            SortType.Comb,
             SortType.Counting,
-            SortType.Heap,
             SortType.Insertion,
             SortType.Merge,
             SortType.Quick,
@@ -35,12 +31,8 @@ class Provider {
                 return new BubbleSort();
             case SortType.Bucket:
                 return new BucketSort();
-            case SortType.Comb:
-                return new CombSort();
             case SortType.Counting:
                 return new CountingSort();
-            case SortType.Heap:
-                return new HeapSort();
             case SortType.Insertion:
                 return new InsertionSort();
             case SortType.Merge:

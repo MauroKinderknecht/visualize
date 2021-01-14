@@ -6,9 +6,7 @@ enum SortType {
     Shell,
     Merge,
     Bucket,
-    Comb,
     Counting,
-    Heap,
     Radix,
 }
 
